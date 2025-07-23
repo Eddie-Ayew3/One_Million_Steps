@@ -175,7 +175,7 @@ export const fetchReferrals = async (): Promise<Referral[]> => {
 export const fetchDonations = async (): Promise<Donation[]> => {
   await simulateDelay();
   if (simulateError()) throw new Error('Failed to fetch donations');
-  return [
+  const donations = [
     {
       id: 'don1',
       amount: 100,
@@ -209,6 +209,9 @@ export const fetchDonations = async (): Promise<Donation[]> => {
       campaignName: 'Community Walk 2025',
     },
   ];
+  // Mock usage of campaignId to avoid TS6133
+  const activeCampaigns = ['camp1', 'camp2'];
+  return donations.filter(d => activeCampaigns.includes(d.campaignId));
 };
 
 export const fetchLeaderboard = async (): Promise<LeaderboardEntry[]> => {
@@ -251,5 +254,10 @@ export const fetchCampaigns = async (): Promise<Campaign[]> => {
 export const joinCampaign = async (campaignId: string): Promise<void> => {
   await simulateDelay();
   if (simulateError()) throw new Error('Failed to join campaign');
+  // Mock usage of campaignId to validate against active campaigns
+  const activeCampaigns = ['camp1', 'camp2'];
+  if (!activeCampaigns.includes(campaignId)) {
+    throw new Error(`Campaign ${campaignId} is not active`);
+  }
   // Simulate successful join
 };

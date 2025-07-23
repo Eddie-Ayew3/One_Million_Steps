@@ -1,10 +1,10 @@
-// src/pages/Profile.tsx
 import React, { useState, useEffect } from 'react';
 import { fetchUser } from '../../../mocks/api';
-import Toast  from './Toast';
+import Toast from './Toast';
+import type{ User } from '../../../mocks/api'; // Import User interface
 
 const Profile: React.FC = () => {
-  const [user, setUser] = useState<any | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -20,9 +20,9 @@ const Profile: React.FC = () => {
         name: data.name,
         email: data.email,
         gender: data.gender || '',
-        device: '',
+        device: data.device || '',
       });
-    });
+    }).catch((err) => console.error('Failed to fetch user:', err));
   }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -31,13 +31,22 @@ const Profile: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Mock API call
+    // Mock API call to update user (to be implemented)
+    setUser({ ...user, ...formData } as User); // Update user state with form data
     setShowToast(true);
   };
 
   return (
     <div className="p-6 space-y-6">
       <h1 className="text-2xl font-bold mb-6">Profile</h1>
+      {user && (
+        <div className="bg-gray-100 rounded-xl p-4 mb-6">
+          <p><strong>ID:</strong> {user.id}</p>
+          <p><strong>Referral Code:</strong> {user.referralCode}</p>
+          <p><strong>Steps:</strong> {user.steps.toLocaleString()}</p>
+          <p><strong>Donation Total:</strong> GHS {user.donationTotal.toLocaleString()}</p>
+        </div>
+      )}
       <div className="bg-white rounded-xl shadow-sm p-6">
         <h2 className="text-xl font-semibold mb-4">Update Profile</h2>
         <form onSubmit={handleSubmit} className="space-y-4">

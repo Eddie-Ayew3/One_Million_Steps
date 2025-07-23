@@ -2,15 +2,10 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { fetchUser } from '../../../mocks/api';
 import Toast from './Toast';
 import Modal from './Modal';
+import type { User } from '../../../mocks/api'; // Import User interface
+ // Import User interface
 
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  gender?: string;
-}
-
-const Profile: React.FC = () => {
+const Referrals: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
   const [formData, setFormData] = useState({
     name: '',
@@ -32,7 +27,7 @@ const Profile: React.FC = () => {
         name: data.name,
         email: data.email,
         gender: data.gender || '',
-        device: '',
+        device: data.device || '',
       });
       setError(null);
     } catch (err) {
@@ -49,7 +44,6 @@ const Profile: React.FC = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    // Basic input sanitization
     const sanitizedValue = value.replace(/[<>{}]/g, '');
     setFormData({ ...formData, [name]: sanitizedValue });
   };
@@ -65,12 +59,20 @@ const Profile: React.FC = () => {
 
   const confirmUpdate = () => {
     setShowConfirmModal(false);
+    setUser({ ...user, ...formData } as User); // Update user state
     setShowToast({ message: 'Profile updated!', type: 'success' });
   };
 
   return (
     <div className="p-6 space-y-6">
-      <h1 className="text-2xl font-bold mb-6">Profile</h1>
+      <h1 className="text-2xl font-bold mb-6">Referrals</h1>
+      {user && (
+        <div className="bg-gray-100 rounded-xl p-4 mb-6">
+          <p><strong>User Name:</strong> {user.name}</p>
+          <p><strong>Email:</strong> {user.email}</p>
+          <p><strong>Referral Code:</strong> {user.referralCode}</p>
+        </div>
+      )}
 
       {loading && (
         <div className="text-center text-gray-600" role="status">
@@ -194,4 +196,4 @@ const Profile: React.FC = () => {
   );
 };
 
-export default Profile;
+export default Referrals;
