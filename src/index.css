@@ -1,0 +1,8 @@
+/* Tailwind directives removed because they require Tailwind CSS processing */
+/* Add your custom CSS here */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+.material-tailwind a, .material-tailwind span {
+  text-decoration: none !important;
+}
